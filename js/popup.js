@@ -3,32 +3,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // onClick's logic below:
     link.addEventListener('click', function() { 
 
-    	var url;
+    	var domain;
 
-        chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-
-        	var url = tabs[0].url;
-
-	    	suspendTab(tabs[0].id);
-
+    	chrome.tabs.getSelected(null, function (tab) {
+			var url = new URL(tab.url);
+			domain = String(url.hostname);
+			console.log(domain);
 		});
+
+		if (domain === 'www.google.com') {
+			suspendTab();
+		}
     });
 });
 
-function suspendTab(urlId, url) {
+function suspendTab() {
 
-	chrome.tabs.update({
-		'url': 'back-to-work.html'
-	}, function() {
-		setTimeout(function(){
-			chrome.tabs.remove(urlId); 
-			// #TODO: Add notifiation to say keep studying -Juan
-		    chrome.tabs.create({
-		    	'url': 'http://www.google.com'
-		    });
-		}, 1000);
+	var url;
+
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+
+    	var tabId = tabs[0].id;
+
+    	chrome.tabs.update({
+			'url': 'back-to-work.html'
+		}, function() {
+			setTimeout(function(){
+				chrome.tabs.remove(tabId); 
+				// #TODO: Add notifiation to say keep studying -Juan
+			    chrome.tabs.create({
+			    	'url': 'http://www.google.com'
+			    });
+			}, 1000);
+		});
+
 	});
-
-
 
 }
