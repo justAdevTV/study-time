@@ -21,11 +21,12 @@ function suspendTab(urlId, url) {
 		'url': 'back-to-work.html'
 	}, function() {
 		setTimeout(function(){
-			chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-		    	
-		    	chrome.tabs.remove(tabs[0].id);
-			});
-		}, 2000);
+			chrome.tabs.remove(urlId); 
+			// #TODO: Add notifiation to say keep studying -Juan
+		    chrome.tabs.create({
+		    	'url': 'http://www.google.com'
+		    });
+		}, 1000);
 	});
 
 
