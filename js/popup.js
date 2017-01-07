@@ -1,3 +1,12 @@
+chrome.webNavigation.onCompleted.addListener(function(details) {
+    suspendTab();
+}, {
+    url: [{
+        // Runs on example.com, example.net, but also example.foo.com
+        hostContains: '.facebook.'
+    }]
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     var link = document.getElementById('suspend-button');
     // onClick's logic below:
@@ -7,13 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     	chrome.tabs.getSelected(null, function (tab) {
 			var url = new URL(tab.url);
-			domain = String(url.hostname);
-			console.log(domain);
-		});
+			domain = url.hostname;
+			
+			if (domain === 'www.google.com') {
+				suspendTab();
+			}
 
-		if (domain === 'www.google.com') {
-			suspendTab();
-		}
+		});
     });
 });
 
