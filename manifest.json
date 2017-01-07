@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+
+  "name": "Study Time!",
+  "description": "Reduces the risk of distractions!",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.svg",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "https://ajax.googleapis.com/"
+  ]
+}
