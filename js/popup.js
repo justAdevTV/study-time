@@ -21,11 +21,8 @@ function suspendTab(urlId, url) {
 		'url': 'back-to-work.html'
 	}, function() {
 		setTimeout(function(){
-			chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-		    	
-		    	chrome.tabs.remove(tabs[0].id);
-			});
-		}, 2000);
+		    chrome.tabs.remove(urlId);
+		}, 7000);
 	});
 
 
