@@ -21,8 +21,12 @@ function suspendTab(urlId, url) {
 		'url': 'back-to-work.html'
 	}, function() {
 		setTimeout(function(){
-		    chrome.tabs.remove(urlId);
-		}, 7000);
+			chrome.tabs.remove(urlId); 
+			// #TODO: Add notifiation to say keep studying -Juan
+		    chrome.tabs.create({
+		    	'url': 'http://www.google.com'
+		    });
+		}, 1000);
 	});
 
 
