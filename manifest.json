@@ -13,5 +13,8 @@
     "tabs",
     "webNavigation",
     "https://ajax.googleapis.com/"
-  ]
+  ],
+  "background": {
+    "scripts": ["js/background.js"]
+  }
 }
