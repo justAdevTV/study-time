@@ -1,18 +1,13 @@
-chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
-  if (changeInfo.status === 'loading') {
-  	var domain;
-
-	chrome.tabs.getSelected(null, function (tab) {
-		var url = new URL(tab.url);
-		domain = url.hostname;
-		
-		if (domain === 'www.facebook.com') {
-			suspendTab();
-		}
-
-	});
-  }
-});
+chrome.webNavigation.onBeforeNavigate.addListener(function(details) { 
+    suspendTab(); 
+}, { 
+    url: [{ 
+        // Runs on example.com, example.net, but also example.foo.com 
+        hostContains: '.youtube.'
+    },{
+    	hostContains: '.facebook.'
+    }] 
+}); 
 
 function suspendTab() {
 
