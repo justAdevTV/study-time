@@ -1,21 +1,30 @@
-// document.addEventListener('DOMContentLoaded', function() {
-//     var link = document.getElementById('suspend-button');
-//     // onClick's logic below:
-//     link.addEventListener('click', function() { 
+document.addEventListener('DOMContentLoaded', function() {
+    var link = document.getElementById('study_button');
+    // onClick's logic below:
+    link.addEventListener('click', function() { 
 
-//     	var domain;
+    	toggleStudyMode();
+    });
+});
 
-//     	chrome.tabs.getSelected(null, function (tab) {
-// 			var url = new URL(tab.url);
-// 			domain = url.hostname;
-			
-// 			if (domain === 'www.google.com') {
-// 				suspendTab();
-// 			}
+function toggleStudyMode() {
+	
+	chrome.storage.sync.get('isStudying', function(res){
+		var isStudying = res.isStudying;
 
-// 		});
-//     });
-// });
+		if (isStudying) {
+			isStudying = false;
+			document.getElementById('study_button').innerHTML = "Stop Studying";
+		} else {
+			isStudying = true;
+			document.getElementById('study_button').innerHTML = "Start Studying";
+		}
+
+	    chrome.storage.sync.set({'isStudying': isStudying});
+
+	});
+   
+}
 
 // function suspendTab() {
 

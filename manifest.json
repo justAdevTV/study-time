@@ -12,6 +12,7 @@
   "permissions": [
     "tabs",
     "webNavigation",
+    "storage",
     "https://ajax.googleapis.com/"
   ],
   "background": {

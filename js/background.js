@@ -1,6 +1,14 @@
 chrome.webNavigation.onBeforeNavigate.addListener(function(details) { 
-    suspendTab(); 
-}, { 
+    chrome.storage.sync.get('isStudying', function(res){
+		var isStudying = res.isStudying;
+
+		if (isStudying) {
+			suspendTab(); 
+		}
+
+	});
+}
+,{ 
     url: [{ 
         // Runs on example.com, example.net, but also example.foo.com 
         hostContains: '.youtube.'
