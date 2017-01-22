@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-	
+
+	showBlockedSites();
+
 	chrome.storage.sync.get('isStudying', function(res){
 		var isStudying = res.isStudying;
 
@@ -9,9 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.getElementById('study_button').innerHTML = "Start";
 		}
 
-	});	    
+	});
 
-    var link = document.getElementById('study_button');
+	var link = document.getElementById('study_button');
     // onClick's logic below:
     link.addEventListener('click', function() { 
 
@@ -20,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function toggleStudyMode() {
-	
+
 	chrome.storage.sync.get('isStudying', function(res){
 		var isStudying = res.isStudying;
 
@@ -32,32 +34,81 @@ function toggleStudyMode() {
 			document.getElementById('study_button').innerHTML = "Start";
 		}
 
-	    chrome.storage.sync.set({'isStudying': isStudying});
+		chrome.storage.sync.set({'isStudying': isStudying});
 
 	});
-   
+
 }
 
-// function suspendTab() {
+function deleteBlockedSite(e, item) {
+	e.preventDefault();
+	$(item).parent().fadeOut('slow', function() { 
+		$(item).parent().remove();
+	});
+}
 
-// 	var url;
+$(function() {
 
-//     chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+	$("#add-blocked-site").on('click', function(e){
+		e.preventDefault();
+		addBlockedSite();
+		submitBlockedSites($('#form-banned-sites').serializeArray());
+	});
 
-//     	var tabId = tabs[0].id;
+	$("#site-list").on('click', '.blocked-site-delete', function(e){
+		var item = this; 
+		deleteBlockedSite(e, item);
+		submitBlockedSites($('#form-banned-sites').serializeArray());
+	})
 
-//     	chrome.tabs.update({
-// 			'url': 'back-to-work.html'
-// 		}, function() {
-// 			setTimeout(function(){
-// 				chrome.tabs.remove(tabId); 
-// 				// #TODO: Add notifiation to say keep studying -Juan
-// 			    chrome.tabs.create({
-// 			    	'url': 'http://www.google.com'
-// 			    });
-// 			}, 1000);
-// 		});
+});
 
-// 	});
+function addBlockedSite() {
+	var blockedSite = $("#new-blocked-site").val();
 
-// }
+	if (blockedSite === '' || blockedSite === undefined || blockedSite === null) {
+		// #TODO: Make better LOL
+		alert('Input CANNOT be empty silly!');
+	} else if(/^[a-zA-Z0-9- ]*$/.test(blockedSite) == false) {
+	    alert('Your input can only contain letters and hyphens!');
+	} else {
+		// #TODO: Add fav icon?
+		$("#site-list").append("<li><input type='text' hidden" + 
+			" name='hostContains'" +
+			" value='."+ 
+			blockedSite + 
+			".'>" +
+			blockedSite +
+			"</input>" +
+			"<button class='blocked-site-delete'>"+
+			"Delete</button></li>");
+
+		$("#new-blocked-site").val("");
+	}
+	
+}
+
+function showBlockedSites() {
+	
+	chrome.storage.sync.get('blockedSites', function(res){
+		var bannedSites = res.blockedSites;
+
+		console.log(bannedSites);
+
+		for (i in bannedSites) {
+		    $("#site-list").append("<li><input type='text' hidden" + 
+				" name='hostContains'" +
+				" value='"+ 
+		    	bannedSites[i].value + 
+				"'</input>" +
+				bannedSites[i].value +
+				"<button class='blocked-site-delete'>"+
+				"Delete</button></li>");
+		}
+	});
+
+}
+
+function submitBlockedSites(sites){
+	chrome.storage.sync.set({'blockedSites': sites});
+}

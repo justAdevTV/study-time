@@ -1,21 +1,19 @@
-chrome.webNavigation.onBeforeNavigate.addListener(function(details) { 
-    chrome.storage.sync.get('isStudying', function(res){
-		var isStudying = res.isStudying;
+var blockedSites;
 
-		if (isStudying) {
-			suspendTab(); 
-		}
+chrome.storage.sync.get('blockedSites', function(res){
 
-	});
-}
-,{ 
-    url: [{ 
-        // Runs on example.com, example.net, but also example.foo.com 
-        hostContains: '.youtube.'
-    },{
-    	hostContains: '.facebook.'
-    }] 
-}); 
+	blockedSites = res.blockedSites;
+
+	chrome.webNavigation.onBeforeNavigate.addListener(function(details) { 
+	    chrome.storage.sync.get('isStudying', function(res){
+			var isStudying = res.isStudying;
+
+			if (isStudying) {
+				suspendTab(); 
+			}	
+		});
+	}, blockedSites); 
+});
 
 function suspendTab() {
 
